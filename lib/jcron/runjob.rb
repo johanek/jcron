@@ -1,36 +1,28 @@
-
-
-
 module Jcron
   class Runjob
 
-    def initialize
-      server = "couchdb"
-      port = "5984"
+    def initialize(server, port='5984')
       @baseuri = "/cron/"
       @couchdb = Jcron::Couch.new(server, port)
     end
-
-    def tester
-      job = Hash.new()
-      job['host'] = Socket.gethostname
-      job['cmd'] = "sleep 1 ; echo hi ; sleep 1 ; echo hi ; ls /tmp/blah ; sleep 1 ; echo hi ; sleep 1 ; echo hi ; sleep 1 "
-      job['starttime'] = Time.now
+    
+    def run(cmd)
+      job = {
+        'host' => Socket.gethostname,
+        'cmd'  => cmd,
+        'starttime' => Time.now
+      }
+      
       @uri = @baseuri + Time.now.utc.iso8601 + "_" + job['host'] + "_" + md5(job['cmd'])
+      
       status = POpen4::popen4(job['cmd']) do |stdout, stderr, stdin, pid|
         job['pid'] = pid
-        # Publish what we know here
+        # Publish that job has started
         result = @couchdb.put(@uri, job.to_json)
-        job['_rev'] = JSON::parse(result.body)['rev']
-        p @uri
-        p job['_rev']
-        job['stdout'] = stdout.read.strip
-        job['stderr'] = stderr.read.strip
+        job.merge! '_rev' => JSON::parse(result.body)['rev'], 'stdout' => stdout.read.strip, 'stderr' => stderr.read.strip
       end
-      job['endtime'] = Time.now
-      job['runtime'] = job['endtime'] - job['starttime']
-      job['exitcode'] = status.exitstatus
-      job['_rev'] =
+      job.merge! 'endtime' => Time.now, 'runtime' => Time.now - job['starttime'], 'exitcode' => status.exitstatus
+      # Publish completed job
       @couchdb.put(@uri, job.to_json)
     end
 
@@ -39,6 +31,4 @@ module Jcron
     end
 
   end
-
-
 end
