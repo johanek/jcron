@@ -1,0 +1,3 @@
+- options to commands that are being run (i.e. ls -l -> -l goes to thor currently)
+
+- better reporting
