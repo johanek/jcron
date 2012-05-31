@@ -13,9 +13,11 @@ end
 class CLI < Thor
 
   desc "ex [cmd]", "run job"
-  def ex(*cmd)
+  def ex
     die("Must provide command to ex") unless cmd.any?
-    cmd = cmd.join(' ')
+    ARGV.delete("ex")
+    cmd = ARGV.join(' ')
+
     server = 'couchdb'
     job = Jcron::Runjob.new(server)
     job.run(cmd)
