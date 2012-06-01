@@ -28,7 +28,7 @@ class CLI < Thor
     # Publish
     require 'eventasaurus'
     ident = 'cron'
-    message = "Cronjob #{cmd} finished on ##{Socket.gethostname} http://couchdb:5984/_utils/database.html?cron"
+    message = %(Cronjob #{cmd} finished on ##{Socket.gethostname} http://couchdb:5984/_utils/database.html?cron)
     Eventasaurus::publish(ident,message)
   end
 
