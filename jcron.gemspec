@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
 
   # specify any dependencies here; for example:
   # s.add_development_dependency "rspec"
-  s.add_runtime_dependency "thor"
-  s.add_runtime_dependency "popen4"
+  gem.add_runtime_dependency "thor"
+  gem.add_runtime_dependency "popen4"
 
 end

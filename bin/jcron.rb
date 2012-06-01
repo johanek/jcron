@@ -13,7 +13,7 @@ end
 class CLI < Thor
 
   desc "ex [cmd]", "run job"
-  def ex
+  def ex(*_)
     ARGV.delete("ex")
     cmd = ARGV.join(' ')
     die("Must provide command to ex") unless ARGV.any?
