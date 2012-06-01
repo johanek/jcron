@@ -12,14 +12,6 @@ def die(msg)
   exit 1
 end
 
-def parser(hash)
-  hash['rows'].each do |row|
-    row['value'].each_pair do |k,v|
-      puts "#{k} - #{v}"
-    end
-  end
-end
-
 class CLI < Thor
 
   desc "ex [cmd]", "run job"
@@ -35,15 +27,9 @@ class CLI < Thor
 
     # Publish
     require 'eventasaurus'
-    stomp = Eventasaurus::Producer.new('event')
-    stomp.topic = 'eventasaurus'
-    msg = {
-      'ident' => 'cron',
-      'timestamp' => Time.now.utc.iso8601,
-      'message' => "Cronjob #{cmd} finished on ##{Socket.gethostname} http://couchdb:5984/_utils/database.html?cron"
-    }
-    stomp.pub(msg.to_json)
-    stomp.close
+    ident = 'cron'
+    message = "Cronjob #{cmd} finished on ##{Socket.gethostname} http://couchdb:5984/_utils/database.html?cron"
+    Eventasaurus::publish(ident,message)
   end
 
   desc "find [cmd]", "find cmd history"
