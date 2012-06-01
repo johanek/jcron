@@ -7,7 +7,7 @@ module Jcron
     end
     
     def find(cmd)
-      uri = @baseuri + "_design/cronview/_view/by_cmd?key=\"#{cmd}\""
+      uri = %(#{@baseuri}_design/cronview/_view/by_cmd?key="#{cmd}")
       result = @couchdb.get(uri)
       JSON.parse(result.body)
     end

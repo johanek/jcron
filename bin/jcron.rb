@@ -4,12 +4,20 @@ $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), "..", "lib
 require 'rubygems'
 require 'thor'
 require 'socket'
+require 'yaml'
 require 'jcron'
-require 'eventasaurus'
 
 def die(msg)
   puts msg
   exit 1
+end
+
+def parser(hash)
+  hash['rows'].each do |row|
+    row['value'].each_pair do |k,v|
+      puts "#{k} - #{v}"
+    end
+  end
 end
 
 class CLI < Thor
@@ -26,6 +34,7 @@ class CLI < Thor
     job.run(cmd)
 
     # Publish
+    require 'eventasaurus'
     stomp = Eventasaurus::Producer.new('event')
     stomp.topic = 'eventasaurus'
     msg = {
@@ -36,6 +45,16 @@ class CLI < Thor
     stomp.pub(msg.to_json)
     stomp.close
   end
+
+  desc "find [cmd]", "find cmd history"
+  def find(*cmd)
+    die("Must provide command to find") unless cmd.any?
+    cmd = cmd.join(' ')
+    server = 'couchdb'
+    job = Jcron::Findjob.new(server)
+    puts job.find(cmd).to_yaml
+  end
+
   
 end
 
