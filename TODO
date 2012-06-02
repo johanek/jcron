@@ -1,1 +1,6 @@
-- run as a different user
+- run as a different user (meh, use su)
+- configuration file
+  - timezone (meh, utc all the things)
+  - make eventasaurus optional
+  - configure database host
+- install script - create db
