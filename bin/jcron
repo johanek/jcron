@@ -7,7 +7,7 @@ require 'jcron'
 require 'eventasaurus'
 require 'socket'
 
-cronfile = "/Users/johan/RubymineProjects/cron/etc/jcrontab"
+cronfile = "/etc/jcrontab"
 @publish = true
 @server = 'couchdb'
 @ident = 'cron'
@@ -55,17 +55,17 @@ def process(line)
     
     # Job didn't run
     if report['error']
-      message = %(WARNING expected run of #{cmd} at #{last_run_at} ##{Socket.gethostname} not found!)
+      message = %(#cron WARNING expected run of #{cmd} started #{last_run_at} on ##{Socket.gethostname} not found!)
     end
     
     # Job still running / bombed
     if report['starttime']
-      message = %(WARNING #{cmd} at #{report['starttime']} on ##{Socket.gethostname} not completed in expected timeframe! #{url}) unless report['endtime']
+      message = %(#cron WARNING #{cmd} started #{report['starttime']} on ##{Socket.gethostname} not completed in expected timeframe! #{url}) unless report['endtime']
     end
     
     # Job produced error messages
     if report['stderr']
-      message = %(NOTICE #{cmd} at #{report['starttime']} on ##{Socket.gethostname} completed with stderr #{url}) if report['stderr'].any?
+      message = %(#cron NOTICE #{cmd} started #{report['starttime']} on ##{Socket.gethostname} completed with stderr #{url}) if report['stderr'].any?
     end
         
     Eventasaurus::publish(@ident,message) if message
@@ -73,14 +73,14 @@ def process(line)
   end
   
   # Run job if the time is now & publish result
-  if cs.is_specification_in_effect?(Time.now) 
+  if cs.is_specification_in_effect?(Time.now.utc) 
     job = Jcron::Runjob.new(@server)
     result = job.run(cmd)
 
-    message = %(OK #{cmd} at #{result['starttime']} finished in #{result['runtime']} on ##{Socket.gethostname} #{gen_url(Time.now,cmd)})
+    message = %(#cron OK #{cmd} started #{result['starttime']} finished in #{result['runtime']} on ##{Socket.gethostname} #{gen_url(Time.now,cmd)})
     
     if result['exitcode']
-      message = %(ERROR #{cmd} at #{result['starttime']} on ##{Socket.gethostname} exited with status #{result['exitcode']}! #{url}) unless result['exitcode'] == 0
+      message = %(#cron ERROR #{cmd} started #{result['starttime']} on ##{Socket.gethostname} exited with status #{result['exitcode']}! #{url}) unless result['exitcode'] == 0
     end    
     
     Eventasaurus::publish(@ident,message)
