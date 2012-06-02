@@ -19,5 +19,7 @@ Gem::Specification.new do |gem|
   # s.add_development_dependency "rspec"
   gem.add_runtime_dependency "thor"
   gem.add_runtime_dependency "popen4"
+  gem.add_runtime_dependency "cron-spec"
+  gem.add_runtime_dependency "eventasaurus"
 
 end
