@@ -5,6 +5,7 @@ require 'rubygems'
 require 'cron-spec'
 require 'jcron'
 require 'eventasaurus'
+require 'socket'
 
 cronfile = "./jcrontab"
 @publish = true
@@ -12,41 +13,49 @@ cronfile = "./jcrontab"
 @ident = 'cron'
 
 def process(line)
-  # Seperate schedule/interval/command from cronline
-  # * * * * * / 60 / do_it.sh
-  fields = line.split(/\s+/)
-  schedule = fields[0..4].join(' ')
-  interval = fields[5].to_i
-  cmd = fields[6..-1].join(' ')
+  begin    
+    # Seperate schedule/interval/command from cronline
+    # * * * * * / 60 / do_it.sh
+    fields = line.split(/\s+/)
+    raise if fields.count < 7
+    schedule = fields[0..4].join(' ')
+    interval = fields[5].to_i
+    cmd = fields[6..-1].join(' ')
   
-  # Sanatise interval
-  interval = 60 if interval == "*"
-  schedule_interval = scheduled_interval(schedule)
-  interval = schedule_interval - 1 if schedule_interval <= interval
-  interval = 1 if schedule == "* * * * *"
-  #puts "#{cmd} #{last_run(schedule)['minutes'].class} #{interval.class}"
-  
-  begin
-    cs = CronSpec::CronSpecification.new(schedule)
+    # Sanitise interval
+    interval = 60 if interval == "*"
+    schedule_interval = scheduled_interval(schedule)
+    interval = schedule_interval - 1 if schedule_interval <= interval
+    interval = 1 if schedule == "* * * * *"
+
   rescue => err
-    puts "Exception: #{err}"
+    message = %(Problem with jcrontab schedule for "#{line}"" on ##{Socket.gethostname})
+    Eventasaurus::publish(@ident,message)
+    puts message
+    puts err
+    return
   end
+
+  # Create cron-spec object
+  cs = CronSpec::CronSpecification.new(schedule)
   
-  # Do reporting
+  # At reporting interval, check the last run of job and report problems
   if last_run(schedule)['minutes'] == interval
-    #puts "matched #{cmd}"
     report = check_last_job(schedule, cmd)
     last_run_at = Time.now - (interval * 60)
     url = gen_url(last_run_at,cmd)
     
+    # Didn't run
     if report['error']
       message = %(WARNING expected run of #{cmd} at #{last_run_at} ##{Socket.gethostname} not found!)
     end
     
+    # Still running / bombed
     if report['starttime']
       message = %(WARNING #{cmd} at #{report['starttime']} on ##{Socket.gethostname} not completed in expected timeframe! #{url}) unless report['endtime']
     end
     
+    # Produced error messages
     if report['stderr']
       message = %(NOTICE #{cmd} at #{report['starttime']} on ##{Socket.gethostname} completed with stderr #{url}) if report['stderr'].any?
     end
@@ -55,19 +64,19 @@ def process(line)
     
   end
   
+  # Run job if the time is now & publish result
   if cs.is_specification_in_effect?(Time.now) 
-    #Run Job
     job = Jcron::Runjob.new(@server)
     result = job.run(cmd)
 
-    # Publish
     message = %(OK #{cmd} finished in #{result['runtime']} on ##{Socket.gethostname} #{gen_url(Time.now,cmd)})
     
     if result['exitcode']
       message = %(ERROR #{cmd} at #{result['starttime']} on ##{Socket.gethostname} exited with status #{result['exitcode']}! #{url}) unless result['exitcode'] == 0
-    end
+    end    
     
     Eventasaurus::publish(@ident,message)
+    
   end
 end
 
