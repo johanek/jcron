@@ -21,11 +21,3 @@
 # |    +----------------------- hour (0 - 23)
 # +---------------------------- min (0 - 59)
 
-* * * * * * ls -l /something/does/not/exist ; true
-* * * * * * echo "run every minute"
-*/2 * * * * 1 echo "run every other minute"
-*/5 * * * * 1 sleep 90
-58 22 * * * 15 echo "every day 22:58pm"
-0 1 * * 0 60 echo "every sunday 1am"
-0 13 * * mon 240 echo "every monday 1pm"
-
