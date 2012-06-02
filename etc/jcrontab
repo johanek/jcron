@@ -1,7 +1,8 @@
 #
 # Jcrontab accepts the following crontab syntax:
 #
-# Note the extra (6th) field! This is for the reporting function, to confirm the last job run successfully
+# Note the extra (6th) field! This is for the reporting function, to confirm the
+# last job run successfully
 #
 # Entry                  Description     Equivalent To
 # @yearly (or @annually) Run once a year   0 0 1 1 *
@@ -10,14 +11,18 @@
 # @daily (or @midnight)  Run once a day    0 0 * * *
 # @hourly                Run once an hour  0 * * * *
 # 
-# *    *    *    *    *    *      
+# *    *    *    *    *    *  [user] [command]    
 # -    -    -    -    -    -
 # |    |    |    |    |    |
 # |    |    |    |    |    |
-# |    |    |    |    |    +--- expected runtime in mins (Default: shortest of 60mins or frequency)
+# |    |    |    |    |    +--- expected runtime mins (Default: 60m/frequency)
 # |    |    |    |    +-------- day of week (0 - 6) (Sunday=0)
 # |    |    |    +------------- month (1 - 12)
 # |    |    +------------------ day of month (1 - 31)
 # |    +----------------------- hour (0 - 23)
 # +---------------------------- min (0 - 59)
 
+###############################################################################
+#                BEWARE: ALL TIMES IN JCRONTAB ARE UTC TIMES                  #
+#              Elsewhere, reports and IDs include the timezone                #
+###############################################################################
