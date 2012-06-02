@@ -1,5 +1,1 @@
-- better reporting
-  - search on substrings
-  - manage command line options better
-
-Is there a better way of handling command line options than processing ARGV?
+- processes need forking (long running processes will block later tasks)

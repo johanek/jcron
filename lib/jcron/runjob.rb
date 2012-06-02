@@ -13,7 +13,8 @@ module Jcron
         'starttime' => Time.now
       }
       
-      @uri = "#{@baseuri}#{Time.now.utc.iso8601}_#{job['host']}_#{md5(job['cmd'])}"
+      # uri = /cron/2012-01-01T12:00Z_hostname_md5hashofcmd
+      @uri = "#{@baseuri}#{Jcron::short_isotime(Time.now)}_#{job['host']}_#{Jcron::md5(job['cmd'])}"
       
       status = POpen4::popen4(job['cmd']) do |stdout, stderr, stdin, pid|
 
@@ -27,10 +28,7 @@ module Jcron
       # Finish data collection & publish completed job
       job.merge! 'endtime' => Time.now, 'runtime' => Time.now - job['starttime'], 'exitcode' => status.exitstatus
       @couchdb.put(@uri, job.to_json)
-    end
-
-    def md5(cmd)
-      Digest::MD5.hexdigest(cmd)
+      job
     end
 
   end
