@@ -1,12 +1,12 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
-require 'jcron'
 require 'json'
+require 'jcron'
 
 dbserver = 'couchdb'
 dbport = 5984
-db = 'jcron'
+db = 'cron'
 dburi = "/#{db}/"
 viewuri = "#{dburi}/_design/cronview"
 
