@@ -12,6 +12,16 @@ cronfile = "/etc/jcrontab"
 @server = 'couchdb'
 @ident = 'cron'
 
+# use this rather than above ^^^
+def read_config
+	config = YAML.load_file("/etc/jcron.yaml")
+	@server = config['dbserver']
+	@port = config['dbport']
+	@database = config['database']
+	@cronfile = config['cronfile']
+	@publish = config['eventasaurus']
+end
+
 def process(line)
   begin        
     # Seperate schedule/interval/command from cronline

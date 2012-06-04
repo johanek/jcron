@@ -3,4 +3,3 @@
   - timezone (meh, utc all the things)
   - make eventasaurus optional
   - configure database host
-- install script - create db
