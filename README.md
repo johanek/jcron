@@ -77,13 +77,10 @@ Finally, set jcron to run every minute from within your system cron config.
 
 ## Usage
 
-Add your required jobs to /etc/jcrontab. 
-
-View status and output from your jobs from your couchdb server. Links to the couchdb document for a job are provided in published messages.
-
-Create web pages/tools to query job status.
-
-TODO: Write up jcron-report once progressed
+ - Add your required jobs to /etc/jcrontab. 
+ - View status and output from your jobs from your couchdb server. Links to the couchdb document for a job are provided in published messages.
+ - Create web pages/tools to query job status.
+ - TODO: Write up jcron-report once progressed
 
 ## Contributing
 
