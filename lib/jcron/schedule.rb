@@ -13,7 +13,7 @@ module Jcron
     	@port = config['dbport']
     	@database = config['database']
     	self.cronfile = config['cronfile']
-    	@publish = config['eventasaurus']
+    	@publish = config['publish']
     end
 
     def process(line)

@@ -1,6 +1,6 @@
 dbserver: couchdb
 dbport: 5984
 database: cron
-eventasaurus: true
+publish: true
 cronfile: /etc/jcrontab
 
