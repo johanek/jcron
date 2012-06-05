@@ -1,5 +1,5 @@
-- run as a different user (meh, use su)
+- run commands as a different user (meh, use su)
 - configuration file
   - timezone (meh, utc all the things)
   - make eventasaurus optional
-  - configure database host
+- write up documentation
