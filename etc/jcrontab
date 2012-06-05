@@ -11,7 +11,7 @@
 # @daily (or @midnight)  Run once a day    0 0 * * *
 # @hourly                Run once an hour  0 * * * *
 # 
-# *    *    *    *    *    *  [user] [command]    
+# *    *    *    *    *    *
 # -    -    -    -    -    -
 # |    |    |    |    |    |
 # |    |    |    |    |    |

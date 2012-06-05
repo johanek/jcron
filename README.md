@@ -57,7 +57,7 @@ Create your jcrontab at /etc/jcrontab. See the example in etc/jcrontab - this lo
     # @daily (or @midnight)  Run once a day    0 0 * * *
     # @hourly                Run once an hour  0 * * * *
     # 
-    # *    *    *    *    *    *  [user] [command]    
+    # *    *    *    *    *    *
     # -    -    -    -    -    -
     # |    |    |    |    |    |
     # |    |    |    |    |    |
