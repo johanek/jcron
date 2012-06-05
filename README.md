@@ -15,11 +15,11 @@ Jcron attempts to help with this, by providing a reporting framework for your cr
 
 There may be more, these are the ones I found most interesting:
 
-*norc* - https://github.com/darrellsilver/norc
+**norc** - https://github.com/darrellsilver/norc
 
 norc is more than cron - it distributes jobs over multiple hosts, has tasks, jobs, dependencies and queues... To me it's more of a distributed job processing/queueing system than a cron replacement. It is a more complicated tool than I require.
 
-*cronologger* - https://github.com/vvuksan/cronologger
+**cronologger** - https://github.com/vvuksan/cronologger
 
 jcron is much inspired by cronologger. However, cronologger only provides reporting, jcron also adds checks that your job started, that the job completed in expected timeframes and push notifications. And isn't written in bash.
 
@@ -34,44 +34,44 @@ Create couchdb database and create views. This can be done with the install/setu
 
 Create a config at /etc/jcron.yaml - an example is provided at etc/jcron.yaml
 
-  dbserver: couchdb
-  dbport: 5984
-  database: cron
-  publish: true
-  cronfile: /etc/jcrontab
+    dbserver: couchdb
+    dbport: 5984
+    database: cron
+    publish: true
+    cronfile: /etc/jcrontab
   
 These options are all straightforward, no? Eventasaurus is required for publishing events.
 
 Create your jcrontab at /etc/jcrontab. See the example in etc/jcrontab - this looks the same as a normal crontab file, BUT there is a 6th field that specifies how long the command should take to run (or rather, when you want to check up on the job) and setting environment variables is not supported.
 
-  #
-  # Jcrontab accepts the following crontab syntax:
-  #
-  # Note the extra (6th) field! This is for the reporting function, to confirm the
-  # last job run successfully
-  #
-  # Entry                  Description     Equivalent To
-  # @yearly (or @annually) Run once a year   0 0 1 1 *
-  # @monthly               Run once a month  0 0 1 * *
-  # @weekly                Run once a week   0 0 * * 0
-  # @daily (or @midnight)  Run once a day    0 0 * * *
-  # @hourly                Run once an hour  0 * * * *
-  # 
-  # *    *    *    *    *    *  [user] [command]    
-  # -    -    -    -    -    -
-  # |    |    |    |    |    |
-  # |    |    |    |    |    |
-  # |    |    |    |    |    +--- expected runtime mins (Default: 60m/frequency)
-  # |    |    |    |    +-------- day of week (0 - 6) (Sunday=0)
-  # |    |    |    +------------- month (1 - 12)
-  # |    |    +------------------ day of month (1 - 31)
-  # |    +----------------------- hour (0 - 23)
-  # +---------------------------- min (0 - 59)
+    #
+    # Jcrontab accepts the following crontab syntax:
+    #
+    # Note the extra (6th) field! This is for the reporting function, to confirm the
+    # last job run successfully
+    #
+    # Entry                  Description     Equivalent To
+    # @yearly (or @annually) Run once a year   0 0 1 1 *
+    # @monthly               Run once a month  0 0 1 * *
+    # @weekly                Run once a week   0 0 * * 0
+    # @daily (or @midnight)  Run once a day    0 0 * * *
+    # @hourly                Run once an hour  0 * * * *
+    # 
+    # *    *    *    *    *    *  [user] [command]    
+    # -    -    -    -    -    -
+    # |    |    |    |    |    |
+    # |    |    |    |    |    |
+    # |    |    |    |    |    +--- expected runtime mins (Default: 60m/frequency)
+    # |    |    |    |    +-------- day of week (0 - 6) (Sunday=0)
+    # |    |    |    +------------- month (1 - 12)
+    # |    |    +------------------ day of month (1 - 31)
+    # |    +----------------------- hour (0 - 23)
+    # +---------------------------- min (0 - 59)
 
-  ###############################################################################
-  #                BEWARE: ALL TIMES IN JCRONTAB ARE UTC TIMES                  #
-  #              Elsewhere, reports and IDs include the timezone                #
-  ###############################################################################
+    ###############################################################################
+    #                BEWARE: ALL TIMES IN JCRONTAB ARE UTC TIMES                  #
+    #              Elsewhere, reports and IDs include the timezone                #
+    ###############################################################################
   
 Finally, set jcron to run every minute from within your system cron config.
 
