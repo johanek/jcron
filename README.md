@@ -11,13 +11,15 @@ Then, I want to be able to get event notifications for these situations, have a 
 
 Jcron attempts to help with this, by providing a reporting framework for your cronjobs. It is expected to be run from system cron every minute, and it has it's own jcrontab file which specifies the jobs it will run. Details of the job are written to a couchdb database. Jobs are checked and reported on after they are expected to have finished. Successful runs and problems can be reported via eventasaurus: https://github.com/johanek/eventasaurus
 
-# Other tools in this space
+## Other tools in this space
 
-norc - https://github.com/darrellsilver/norc
+There may be more, these are the ones I found most interesting:
+
+*norc* - https://github.com/darrellsilver/norc
 
 norc is more than cron - it distributes jobs over multiple hosts, has tasks, jobs, dependencies and queues... To me it's more of a distributed job processing/queueing system than a cron replacement. It is a more complicated tool than I require.
 
-cronologger - https://github.com/vvuksan/cronologger
+*cronologger* - https://github.com/vvuksan/cronologger
 
 jcron is much inspired by cronologger. However, cronologger only provides reporting, jcron also adds checks that your job started, that the job completed in expected timeframes and push notifications. And isn't written in bash.
 
