@@ -42,7 +42,7 @@ module Jcron
 
       rescue => err
         message = %(Problem with jcrontab schedule for "#{line}"" on ##{Socket.gethostname})
-        Eventasaurus::publish(@ident,message)
+        Eventasaurus::publish(@ident,message) if @publish
         puts message
         puts err
         return
@@ -72,7 +72,7 @@ module Jcron
           message = %(#cron NOTICE #{cmd} started #{report['starttime']} on ##{Socket.gethostname} completed with stderr #{url}) if report['stderr'].any?
         end
 
-        Eventasaurus::publish(@ident,message) if message
+        Eventasaurus::publish(@ident,message) if message && @publish
 
       end
 
@@ -87,7 +87,7 @@ module Jcron
           message = %(#cron ERROR #{cmd} started #{result['starttime']} on ##{Socket.gethostname} exited with status #{result['exitcode']}! #{url}) unless result['exitcode'] == 0
         end    
 
-        Eventasaurus::publish(@ident,message)
+        Eventasaurus::publish(@ident,message) if @publish
 
       end
     end
